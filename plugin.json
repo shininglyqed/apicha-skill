@@ -1,0 +1,10 @@
+{
+    "name": "my-skill",
+    "skills": [
+        "./skills/debug-mantra",
+        "./skills/post-mortem",
+        "./skills/scrutinize",
+        "./skills/management-talk",
+        "./skills/software-design"
+    ]
+}
