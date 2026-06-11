@@ -1,11 +1,17 @@
 ---
 name: software-design
-description: Design software architectures and draft detailed design proposals with embedded Mermaid diagrams before writing any code. Trigger this skill whenever a user introduces new requirements, asks for a system architecture design, or requests a new feature.
+description: Design software architectures and produce modular design proposals under `docs/` before any code is written. Trigger this skill on /software-design and proactively whenever the user says "I want to build", "we need a system for", "design a feature", "how should I structure this", "plan out the architecture", "I have a new requirement", or introduces scope that touches more than one service or module — even if they don't say the word "design". In medium-to-large projects, treat the `docs/` folder as the sole source of truth to prevent redundant codebase-wide scans.
 ---
 
-# Software Design Skill (Strict Design-First)
+# Software Design Skill (Strict Design-First & Modular Documentation)
 
-Always adopt a strict "Design-First" stance. Do NOT modify implementation code, create source code files, or run installation commands until the design proposal has been drafted in a `.md` file, visualized with Mermaid diagrams inside that document, and explicitly reviewed and approved by the user.
+Always adopt a strict "Design-First" stance. Do NOT modify implementation code, create source code files, or run installation commands until the design proposal has been drafted/updated across modular `.md` files in the `docs/` folder, and explicitly approved by the user.
+
+**Token Optimization & Anti-Scanning Invariant:**
+To prevent wasting tokens on scanning large directories repeatedly:
+- The markdown files under `docs/` serve as the canonical **Source of Truth** for the project's architecture, routes, database schemas, and components.
+- Do NOT run project-wide grep searches or file scans on every task. Instead, read the specific design file (e.g. `docs/backend/endpoints.md`) first to identify exactly which files need to be modified.
+- Update the design documentation *first* whenever requirements evolve.
 
 ## Fixed Tech Stack & Constraints
 
@@ -27,34 +33,35 @@ Analyze the user's requirements and immediately ask clarifying questions to alig
 2. **System Boundaries & Constraints:** What external systems must this integrate with? What are the limitations or restrictions?
 3. **Data & Traffic Volume:** What is the scale? (e.g., requests per second, storage size, concurrent users).
 
-### Step 2: Create the Design Document (.md)
-Write a comprehensive design document in the workspace (e.g., `docs/design_proposal.md`). The file must follow this structure:
+### Step 2: Create or Update Modular Design Documents
+Write or update the design files under the `docs/` directory, structured by components to prevent reading large, monolithic design documents:
 
-1. **Title & Document Metadata:** Clear project/feature title, author, and date.
-2. **Problem Statement & Requirements:**
-   - **Functional:** Core features and system behaviors.
-   - **Non-Functional:** Performance (Fastify/uWS optimizations), Scalability, and Connection handling.
-3. **Proposed System Architecture:**
-   - High-level overview of the architectural pattern (e.g., Layered Architecture, Clean Architecture adjusted for Fastify plugins).
+1. **`docs/system/architecture.md` (System Topology)**
+   - High-level architectural pattern (e.g. Layered Architecture, Clean Architecture adjusted for Fastify).
    - Component responsibilities (Client, Fastify REST API, WebSocket Server, MySQL DB).
-4. **Architecture & Flow Diagrams (Mermaid) - MUST INCLUDE BOTH:**
-   - **System Architecture Diagram (graph TD):** To visually map out the system components, network boundaries, and connection topologies (e.g., how Fastify and WebSocket connect to MySQL).
-   - **User Interaction & Data Flow Diagram (sequenceDiagram):** To map out the exact sequence of user actions (clicks/events), API requests, WebSocket messages, and database operations.
-5. **Technical Stack Choices & Trade-offs:**
-   - Document how Fastify, MySQL, and the chosen WS solution interact.
-   - Detail connection pooling for MySQL and resource management for WebSockets.
-6. **Data Models / Database Schema:**
-   - Key MySQL tables, fields, types, and primary/foreign key relations (DDL/SQL format preferred).
-7. **Open Questions / Feedback Points:**
-   - Specific items that need the user's explicit decision.
+   - **Both** `graph TD` (System Topology) and `sequenceDiagram` (User event/data flows) Mermaid diagrams.
+2. **`docs/backend/endpoints.md` (Fastify & WebSockets Spec)**
+   - API routes, method, request validation schema definitions, and response payloads.
+   - WebSocket message/event names, payloads, and state cleanup rules.
+   - Authentication protocols (JWT, API keys, WS Handshake auth rules).
+3. **`docs/frontend/components.md` (Client-side Design)**
+   - View/component hierarchy and layout mapping.
+   - State management strategy (React state/context or Vanilla JS custom store) and key routes.
+4. **`docs/database/schema.md` (MySQL Schema Spec)**
+   - Key MySQL tables, fields, data types, indexes, and primary/foreign key relations (DDL/SQL format).
+   - Database migration strategy.
 
 ### Step 3: Present for Review & Iterate
-- Provide the user with a direct markdown file link to the design document.
-- Highlight the key architectural decisions (especially how Fastify routes and WebSocket connections are structured alongside MySQL).
-- Incorporate feedback, update the document, and repeat until the user explicitly says the design is approved.
+- Provide the user with direct markdown file links to the updated design documents in `docs/`.
+- Highlight key changes (especially network boundaries, route schemas, and database relations).
+- Incorporate feedback, update the corresponding documentation files, and repeat until approved.
 
 ### Step 4: Hand-off to Implementation
-- Once approved, proceed to formulate an implementation plan, database migration steps, or task list based on the approved design.
+- Once approved, proceed to formulate an implementation plan or task list based on the approved design files, editing only the specific source files mapped in the design.
+
+### Step 5: Keep Documentation In-Sync (Post-Implementation Update)
+- **CRITICAL INVARIANT:** Immediately after writing, modifying, or refactoring any code files, you **MUST** update the corresponding design/architecture files under `docs/` (`docs/system/architecture.md`, `docs/backend/endpoints.md`, `docs/frontend/components.md`, or `docs/database/schema.md`) to reflect the exact implementation details.
+- Never let code and design diverge. If an implementation detail changed during coding (e.g., modified route paths, additional database keys, altered component props), adjust the documentation file immediately as the final step of the task before declaring it complete.
 
 ---
 
@@ -127,9 +134,15 @@ my-app/
 │   │
 │   └── frontend/                # Client-side user interface folder
 │       # (Structure will vary based on user framework choice: React vs Vanilla JS)
-└── docs/                        # Project documentation repository
-    ├── design_proposal.md       # Target file generated by this skill
-    └── database_schema.md       # MySQL database layout description
+└── docs/                        # Project documentation repository (Source of Truth)
+    ├── system/
+    │   └── architecture.md      # High-level architecture & Mermaid diagrams
+    ├── backend/
+    │   └── endpoints.md         # API route schemas, controllers, websocket events
+    ├── frontend/
+    │   └── components.md        # UI component tree, routes, and state
+    └── database/
+        └── schema.md            # MySQL database DDL and schema details
 ```
 
 ## Mandatory Security Context (Zero-Trust Architecture)

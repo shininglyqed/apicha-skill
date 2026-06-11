@@ -1,6 +1,6 @@
 ---
 name: management-talk
-description: Rewrite engineer-to-engineer content for engineering-org leadership (VPs, directors, PMs, release managers, execs in an engineering-savvy company) and shape it for the channel it is going to — JIRA comment, Slack post, async standup line, email, or meeting talking-points. Trigger when the user asks to write/rewrite for management / exec / VP / director / PM / release manager, asks for an "executive summary / leadership update / status update", says "make this less technical / less jargony", or asks for a slack / email / standup / meeting version of work originally written engineer-to-engineer.
+description: Rewrite engineer-to-engineer content for engineering-org leadership (VPs, directors, PMs, release managers) and shape it for its delivery channel — JIRA comment, Slack post, async standup, email, or meeting talking-points. Trigger on /management-talk and proactively whenever the user says "write this for management", "make this less technical", "exec summary", "status update for the boss", "explain to a PM", "make this non-technical", "put this in a Slack message", "standup format", "how do I explain this to leadership", or pastes engineer-written content and asks who it's going to.
 ---
 
 # Management Talk

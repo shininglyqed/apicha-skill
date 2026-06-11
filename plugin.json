@@ -5,6 +5,13 @@
         "./skills/post-mortem",
         "./skills/scrutinize",
         "./skills/management-talk",
-        "./skills/software-design"
+        "./skills/software-design",
+        "./skills/code-refactoring",
+        "./skills/guardrail-design",
+        "./skills/jargon-free-error",
+        "./skills/self-evolution",
+        "./skills/runbook-generator",
+        "./skills/db-migration",
+        "./skills/test-writer"
     ]
 }
