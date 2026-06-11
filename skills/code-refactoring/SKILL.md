@@ -16,6 +16,7 @@ You must strictly adhere to these safety rules during any refactoring task:
 2. **Incremental & Atomic Edits:** Make small, logical, self-contained changes. Do not attempt a massive multi-file rewrite at once. The codebase must be runnable at every single step.
 3. **No Placeholders / Incomplete Logic:** Never leave `// TODO` stubs or deleted-code comments behind. Every file must be fully functional after the edit.
 4. **Double-Ended Validation:** Run the test suite before you start (baseline) and immediately after every change (regression check).
+5. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
 
 ---
 

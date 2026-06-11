@@ -16,6 +16,7 @@ No code moves to code review without tests. Writing tests after the fact produce
 3. **Three Test Categories Minimum:** Every feature must have tests covering: (a) the happy path, (b) at least one edge case or boundary, (c) at least one error/failure path.
 4. **No Mocking Internals You Own:** Only mock external dependencies (network calls, third-party APIs, file system). Never mock functions from the same module under test — that produces false coverage.
 5. **Docs In-Sync:** After writing tests, confirm the tested behavior matches `docs/backend/endpoints.md` or `docs/system/architecture.md`.
+6. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
 
 ---
 

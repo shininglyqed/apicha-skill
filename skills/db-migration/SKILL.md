@@ -16,6 +16,7 @@ Every database schema change — no matter how small — must be captured as a m
 3. **Always Provide a Down Migration:** Every `up` migration must have a matching `down` that fully reverses it. Never leave `down` empty or as a no-op.
 4. **Never Modify an Already-Run Migration:** If a migration has been committed and applied, create a new migration to correct it. Do not edit the original file.
 5. **Docs In-Sync:** After generating a migration, update `docs/database/schema.md` to reflect the new schema state before declaring the task done.
+6. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
 
 ---
 

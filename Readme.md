@@ -161,6 +161,9 @@ To illustrate how these skills work together, here is an end-to-end walkthrough 
 
 Tell the agent to run these instructions anytime to manage repository versions without typing raw git syntax:
 
+> [!NOTE]
+> **Visual Commit Graphs:** Whenever the agent executes any Git operation (like commit, checkout, merge, status, reset, etc.), it is required to always include a visual Git Graph diagram using a Markdown Mermaid block at the end of its response to keep the branch history and commit structures fully transparent.
+
 | You Say... | What the Agent Does |
 | :--- | :--- |
 | **"Save a checkpoint"** | Runs `git add -A && git commit -m "chore: checkpoint"` |

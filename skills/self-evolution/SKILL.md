@@ -17,6 +17,7 @@ You must strictly adhere to these safety rules during a self-evolution cycle:
 3. **Validate Registration:** After modifying any skill, always execute the listing/linking scripts to ensure the files parse correctly and remain active.
 4. **Backup Before Modifying:** Before editing any `SKILL.md` file, copy its current contents to `scratch/skill-backup/<skill-name>_<timestamp>.md`. Never modify a skill file without a restorable backup existing first.
 5. **Core Invariants Are Protected:** The `## Core Invariants` section of any skill is **read-only** during self-evolution. You are strictly forbidden from altering, removing, or weakening any item in a `Core Invariants` section without first presenting the proposed change to the user and receiving explicit written confirmation (e.g., user replies "confirmed" or "yes, change it").
+6. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
 
 ---
 
