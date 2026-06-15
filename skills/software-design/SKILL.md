@@ -40,10 +40,15 @@ Write or update the design files under the `docs/` directory, structured by comp
    - High-level architectural pattern (e.g. Layered Architecture, Clean Architecture adjusted for Fastify).
    - Component responsibilities (Client, Fastify REST API, WebSocket Server, MySQL DB).
    - **Both** `graph TD` (System Topology) and `sequenceDiagram` (User event/data flows) Mermaid diagrams.
+   - **Authentication Boundary Map (Mandatory):** Must explicitly annotate which auth mechanism guards each boundary:
+     - `routes/internal/` → protected by **JWT (`verifyToken` middleware)**
+     - `routes/external/` → protected by **API Key (`verifyApiKey` middleware)**
+     - `routes/websocket/` → protected by **JWT validated at HTTP Upgrade/Handshake**
 2. **`docs/backend/endpoints.md` (Fastify & WebSockets Spec)**
    - API routes, method, request validation schema definitions, and response payloads.
    - WebSocket message/event names, payloads, and state cleanup rules.
-   - Authentication protocols (JWT, API keys, WS Handshake auth rules).
+   - Authentication protocols: specify **which middleware** (`verifyToken` or `verifyApiKey`) guards each route group.
+   - **No RBAC in endpoint spec:** Do NOT add role guards, permission checks, or access matrices to any route definition unless the user has explicitly requested RBAC for that specific feature.
 3. **`docs/frontend/components.md` (Client-side Design)**
    - View/component hierarchy and layout mapping.
    - State management strategy (React state/context or Vanilla JS custom store) and key routes.
@@ -145,18 +150,23 @@ my-app/
         └── schema.md            # MySQL database DDL and schema details
 ```
 
-## Mandatory Security Context (Zero-Trust Architecture)
-Even if running inside a private company intranet, you must explicitly enforce and document the following security strategies across different entry points to ensure clear boundaries and avoid logic pollution:
+## Mandatory Security & Authentication Context
 
-1. **Internal API (`routes/internal/`): User-Centric Protection**
-   - Must use **JWT (JSON Web Tokens)** or **HttpOnly Cookie Sessions** to authenticate human operators/engineers.
-   - Every request must verify the user's role before accessing business services to support data auditing and log tracking ("Who changed what?").
+Every project created must strictly implement two core authentication mechanisms and adhere to the following security design constraints:
 
-2. **External API (`routes/external/`): Machine-to-Machine Protection**
-   - Dedicated for automated third-party integrations, automated scripts, or webhooks.
-   - Must strictly require an **API Key** passed in headers or a **Webhook Secret Signature Verification** (e.g., HMAC validation).
-   - Must be isolated from user session logic to prevent bad automated scripts from flooding or crashing core application flows.
+1. **Dual Core Authentication (Mandatory):**
+   - **JWT (JSON Web Token):** For User-facing endpoints (Frontend / humans accessing the system via a Web App).
+   - **API Key / App Credentials:** For Service-to-Service endpoints (external systems, bots, or partners pulling data automatically).
 
-3. **WebSocket Endpoints (`routes/websocket/`): Pre-Flight Handshake Protection**
+2. **No RBAC by Default (Conditional):**
+   - Do **NOT** implement any roles, permission matrices, or Role-Based Access Control (RBAC) in the codebase by default.
+   - RBAC must only be introduced if the user explicitly specifies: *"I want to use RBAC for this feature."*
+
+3. **Design Philosophy:**
+   - **Keep it simple:** Keep the overall authorization/authentication system as concise and simple as possible.
+   - **Clear Middleware Separation:** Keep the JWT verification middleware (`verifyToken`) and the API Key verification middleware (`verifyApiKey`) completely separate.
+   - **Clean Architecture:** Router setup and token payloads must remain clean, simple, and easy to read.
+
+4. **WebSocket Endpoints (`routes/websocket/`): Pre-Flight Handshake Protection**
    - Authentication must be validated at the earliest gate: **During the HTTP Upgrade / Handshake Request**.
    - If no valid JWT token is provided, the server must **Reject the Handshake immediately (HTTP 401/403)** to save memory overhead and protect server resources from dangling unauthenticated connections.

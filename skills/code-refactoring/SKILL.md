@@ -17,6 +17,7 @@ You must strictly adhere to these safety rules during any refactoring task:
 3. **No Placeholders / Incomplete Logic:** Never leave `// TODO` stubs or deleted-code comments behind. Every file must be fully functional after the edit.
 4. **Double-Ended Validation:** Run the test suite before you start (baseline) and immediately after every change (regression check).
 5. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
+6. **Never Merge Auth Middlewares:** During refactoring, you must **never** combine `verifyToken` (JWT) and `verifyApiKey` (API Key) into a single shared middleware or utility. They must remain completely separate modules. Merging them violates the core authentication design philosophy of this project.
 
 ---
 

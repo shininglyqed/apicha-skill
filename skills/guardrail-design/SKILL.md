@@ -7,6 +7,20 @@ description: Design system guardrails, input validation rules, and UI fail-safes
 
 Ensure the system is designed to handle human errors, slipups, and accidents. A single accidental click must never result in catastrophic data loss, system-wide downtime, or irreversible state changes.
 
+---
+
+## Core Invariants
+
+1. **Destructive Actions Must Have Friction:** Any action that deletes, bulk-updates, resets, or makes irreversible changes must never be executed with a single click. A confirmation step is non-negotiable.
+2. **Soft Delete by Default:** Primary database records must never be hard-deleted. Always implement a `deleted_at` timestamp column. Hard deletes are only permitted when the user explicitly specifies it.
+3. **Docs In-Sync (Mandatory):** After specifying or implementing any guardrail (confirmation modal, idempotency key, soft-delete column), you must update the corresponding `docs/` files before declaring the task done:
+   - Destructive endpoint guardrails → `docs/backend/endpoints.md`
+   - Schema changes (e.g., `deleted_at`) → `docs/database/schema.md`
+4. **Dual-Layer Validation:** Input validation must exist at both the frontend (UX hints) and backend (strict schema). Trusting only one layer is a violation.
+5. **No Scope Creep:** Do not implement features or fix unrelated bugs while adding guardrails. Guardrail work is isolated.
+
+---
+
 ## Core Design Principles
 
 You must incorporate the following safety patterns into system designs and codebases:
@@ -44,7 +58,7 @@ You must follow these steps when designing or reviewing a feature under this ski
   - Does it need a "Type to Confirm" UI modal?
   - Do we need backend idempotency key checks?
   - Do we need transaction rollbacks?
-- Document these choices explicitly in `docs/system/architecture.md` or the corresponding `docs/backend/endpoints.md` / `docs/database/schema.md`.
+- Document these choices explicitly in `docs/system/architecture.md` or the corresponding `docs/backend/endpoints.md` / `docs/database/schema.md`. **This doc update is mandatory, not optional.**
 
 ### Step 3: Implement and Validate
 - Write the schema validation rules first (route schema options, Zod schema, or middleware validators).

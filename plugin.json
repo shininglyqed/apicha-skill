@@ -1,5 +1,5 @@
 {
-    "name": "my-skill",
+    "name": "apicha-skill",
     "skills": [
         "./skills/debug-mantra",
         "./skills/post-mortem",

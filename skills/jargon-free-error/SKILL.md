@@ -65,3 +65,13 @@ All API error responses must be mapped to this standard JSON format:
 - Set up a centralized error handler at the outermost layer of your backend (e.g., Express `app.use(errorHandler)`, Fastify `setErrorHandler`, Django middleware, Rails `rescue_from`).
 - Inside the handler, read the error type/status and map database or network exceptions to the friendly format using the mapping table above.
 - Ensure raw stack traces are written to backend logs only (tagged with an `errorId` UUID), and only the structured friendly JSON is returned to the client.
+
+### Step 3: Verify the Error Handler
+- Trigger each mapped error type manually (e.g., insert a duplicate key, call a bad endpoint, kill the DB connection) and confirm the response JSON matches the target payload structure above — not the raw exception.
+- Confirm raw stack traces do **not** appear in the client response body.
+- Run the test suite: `npm test` — error response tests must pass before declaring done.
+
+### Step 4: Update Docs
+- Open `docs/backend/endpoints.md` and add an **Error Response** section listing every error `code` (e.g., `DUPLICATE_ENTRY`, `VALIDATION_ERROR`, `INTERNAL_ERROR`) alongside its `statusCode` and friendly message keys.
+- This keeps the error contract visible to other engineers without reading the handler code.
+

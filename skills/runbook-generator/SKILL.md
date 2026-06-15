@@ -49,9 +49,14 @@ Every runbook generated must follow this layout:
 
 ## Workflow Steps
 
-### Step 1: Scan Code Changes
-- Read the git diff, PR details, or modified files in the codebase.
-- Identify the UI inputs, buttons, database constraints, and user flows touched by the code change.
+### Step 1: Gather Change Information
+First, verify that git is available and the repository is initialized:
+```bash
+git status   # Confirm git is active and working tree is readable
+git diff HEAD~1 HEAD --name-only   # List files changed in the last commit
+```
+- If `git` is unavailable or the repo has no commits yet: **fall back** — ask the user to describe the change or paste the modified file(s) directly, then proceed to Step 2.
+- If git is available: read the diff output and the PR details to identify all UI inputs, buttons, database constraints, and user flows touched by the code change.
 
 ### Step 2: Extract Error Actions
 - Read any caught database constraints, network errors, or Fastify validation schemas introduced.

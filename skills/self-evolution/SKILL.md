@@ -62,10 +62,18 @@ Confirm the backup file exists before proceeding.
 - Otherwise: use the file edit tools (`replace_file_content` or `multi_replace_file_content`) to update the target `skills/<target-skill>/SKILL.md` file. Add the new rules under the `Guidelines` or a new subsection — never inside `Core Invariants` without user approval.
 
 ### Step 5: Link & Verify
-Run the linking and verification scripts in the workspace:
+Run the appropriate linking and verification scripts based on the operating system:
+
+**Windows (PowerShell):**
 ```powershell
 .\scripts\link-skills.ps1
 .\scripts\list-skills.ps1
+```
+
+**macOS / Linux / WSL (Bash):**
+```bash
+./scripts/link-skills.sh
+./scripts/list-skills.sh
 ```
 
 ### Step 6: Present Walkthrough

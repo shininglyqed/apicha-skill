@@ -17,6 +17,7 @@ No code moves to code review without tests. Writing tests after the fact produce
 4. **No Mocking Internals You Own:** Only mock external dependencies (network calls, third-party APIs, file system). Never mock functions from the same module under test — that produces false coverage.
 5. **Docs In-Sync:** After writing tests, confirm the tested behavior matches `docs/backend/endpoints.md` or `docs/system/architecture.md`.
 6. **Visual Git Graph Required:** Whenever you perform any Git operation (like commit, checkout, or merge), you must always include a visual Git Graph diagram using a Markdown Mermaid block at the end of your response to show the current branch structure and commit history clearly.
+7. **Auth Middleware Must Be Tested:** Whenever `verifyToken` (JWT) or `verifyApiKey` (API Key) middleware is implemented or modified, their test coverage is **mandatory** — not optional. Tests must cover: (a) valid token/key passes, (b) missing token/key returns 401, (c) invalid/expired token/key returns 401 or 403.
 
 ---
 
@@ -86,7 +87,33 @@ describe('POST /users', () => {
 
 ---
 
-## Workflow Steps
+### Auth Middleware Tests (Mandatory for `verifyToken` and `verifyApiKey`)
+```js
+// tests/unit/middleware.test.js
+import { describe, it, expect, vi } from 'vitest'
+import { verifyToken } from '../../src/middleware/verifyToken.js'
+import { verifyApiKey } from '../../src/middleware/verifyApiKey.js'
+
+describe('verifyToken middleware', () => {
+  it('calls next() on a valid JWT', async () => {
+    // mock req with valid Authorization header, expect next() to be called
+  })
+  it('returns 401 when Authorization header is missing', async () => {
+    // mock req with no header, expect reply.code(401).send()
+  })
+  it('returns 401 on an expired or invalid token', async () => {
+    // mock req with malformed token, expect reply.code(401).send()
+  })
+})
+
+describe('verifyApiKey middleware', () => {
+  it('calls next() on a valid API key in x-api-key header', async () => {})
+  it('returns 401 when x-api-key header is missing', async () => {})
+  it('returns 403 when the API key does not match any known credential', async () => {})
+})
+```
+
+---
 
 ### Step 1: Identify the Surface Under Test
 - List every exported function, API endpoint, or class method in the target file.
