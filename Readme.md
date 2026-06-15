@@ -133,7 +133,7 @@ To illustrate how these skills work together, here is an end-to-end walkthrough 
 ### 🗄️ Phase 1.5 — Database Migration
 *   **You say:** 
     > "/db-migration Create a `machine_logs` table for telemetry data (machine_id, temperature, rpm, timestamp) and a `command_audit` table to track who triggered which machine command."
-*   **AI Action:** Generates structured Knex/Prisma migration scripts (with matching `up` and `down` logic), validates them locally, commits the migration files, and updates the database schema docs.
+*   **AI Action:** Generates structured Knex.js migration scripts (with optional rollback logic), validates them locally, commits the migration files, and updates the database schema docs.
 
 ### 🟩 Phase 2 — Implementation (New Feature)
 *   **You say:** 
